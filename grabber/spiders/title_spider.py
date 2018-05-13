@@ -21,6 +21,7 @@ class TitleSpider(scrapy.Spider):
             item['url'] = "https://www.youth4work.com/" + str(title.css("a::attr(href)").extract_first()).strip()
             posts = title.css("ul.list-inline li:nth-of-type(5)::text").extract_first()
             pages = math.ceil(int(posts.replace(" Answers", "")) / 20)
+            print(pages)
             item["page_count"] = pages
             yield item
             # item['name'] = str(title.css("div.item-subject a::text").extract_first()).strip()
