@@ -48,4 +48,3 @@ class ForumDatabase:
 # message = {'d': "sdsdsd"}
 # forum.save_message(message)
 
-# self.__topics_coll.remove()
