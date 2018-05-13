@@ -1,3 +1,4 @@
+from bson import ObjectId
 from pymongo import MongoClient
 
 
@@ -17,8 +18,16 @@ class ForumDatabase:
     def get_titles(self):
         return list(self.__titles.find())
 
-    def get_messages_count(self, title_name: str):
-        messages = list(self.__messages.find({"title_name": title_name}))
+    def get_title_id_by_name(self, title_name) -> dict:
+        return self.__titles.find_one({"name": title_name})["_id"]
+
+    def get_title_by_id(self, id) -> dict:
+        return self.__titles.find_one({"_id": ObjectId(id)})
+
+    def get_messages_count(self, id: str):
+        title = self.get_title_by_id(id)
+        messages = list(self.__messages.find({"title_name": title["name"]}))
+        print(len(messages))
         authors_list = list({})
         for message in messages:
             authors_list.insert(len(authors_list), message["author"])
@@ -34,7 +43,8 @@ class ForumDatabase:
     def close(self):
         self.__client.close()
 
-# forum = ForumDatabase()
+
+forum = ForumDatabase()
 # titles = forum.get_titles()
 # for title in titles:
 #     page_count = title['url'].replace(
@@ -42,9 +52,13 @@ class ForumDatabase:
 #         "")
 #     print(title['url'])
 
-# print(forum.get_messages_count("Ітератори"))
+# print(forum.get_messages_count("What is vector in C ?"))
+print(forum.get_title_id_by_name("What is vector in C ?"))
+print(forum.get_title_name_by_id("5af88941b5d5103243bce9d2"))
+
 # forum.clear()
 # forum.get_messages_count("Ітератори")
 # message = {'d': "sdsdsd"}
 # forum.save_message(message)
 
+# self.__topics_coll.remove()
