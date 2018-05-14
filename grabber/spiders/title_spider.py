@@ -23,9 +23,6 @@ class TitleSpider(scrapy.Spider):
             pages = math.ceil(int(posts.replace(" Answers", "")) / 20)
             item["page_count"] = pages
             yield item
-            # item['name'] = str(title.css("div.item-subject a::text").extract_first()).strip()
-            # item['url'] = str(title.css("h3.hn a::attr(href)").extract_first()).strip()
-            # yield item
 
         next_page_url = response.css("a.Next::attr(href)").extract_first()
         if next_page_url is not None:
