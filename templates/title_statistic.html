@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src='../static/Chart.min.js'></script>
+    <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark" role="navigation">
+    <div class="navbar-header">
+        <a class="navbar-brand text-center" href="/">Forum Analyzer</a>
+    </div>
+</nav>
+
+<h2 class="text-center" style="color:lightsteelblue"> {{ title_name }} </h2>
+<div class="container">
+    <canvas id="chart" class="canvas"></canvas>
+    <div class="col-md-2 col-md-offset-1">
+        <a href="{{ title_url }}" role="button" class="btn btn-success">Jump to source</a>
+    </div>
+    <br/>
+    <div>
+        <div class="w3-table w3-striped">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Author</th>
+                    <th>count</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for author, messages_count in author_mess_count.items() %}
+                    <tr>
+                        <td>{{ author }}</td>
+                        <td>{{ messages_count }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    // bar chart data
+    let barData = {
+        labels: [{% for author in author_mess_count.keys() %}
+            "{{author}}",
+        {% endfor %}],
+        datasets: [
+            {
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                data: [{% for messages_count in author_mess_count.values() %}
+                    {{messages_count}},
+                {% endfor %}]
+            }
+        ]
+    };
+    // get bar chart canvas
+    let mychart = document.getElementById("chart").getContext("2d");
+    steps = {{ max_amount }};
+    max = {{ max_amount }};
+    // draw bar chart
+    new Chart(mychart,{
+       type: 'bar',
+       data: barData,
+       options: {
+            scaleOverride: true,
+            scaleSteps: steps,
+            scaleStepWidth: Math.ceil(max / steps),
+            scaleStartValue: 0,
+            scaleShowVerticalLines: true,
+            scaleShowGridLines: true,
+            barShowStroke: true,
+            scaleShowLabels: true
+           }
+       }
+    );
+</script>
+</body>
+</html>

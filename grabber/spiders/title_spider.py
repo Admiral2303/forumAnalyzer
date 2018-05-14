@@ -21,12 +21,8 @@ class TitleSpider(scrapy.Spider):
             item['url'] = "https://www.youth4work.com/" + str(title.css("a::attr(href)").extract_first()).strip()
             posts = title.css("ul.list-inline li:nth-of-type(5)::text").extract_first()
             pages = math.ceil(int(posts.replace(" Answers", "")) / 20)
-            print(pages)
             item["page_count"] = pages
             yield item
-            # item['name'] = str(title.css("div.item-subject a::text").extract_first()).strip()
-            # item['url'] = str(title.css("h3.hn a::attr(href)").extract_first()).strip()
-            # yield item
 
         next_page_url = response.css("a.Next::attr(href)").extract_first()
         if next_page_url is not None:
