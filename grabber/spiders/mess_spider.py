@@ -6,18 +6,16 @@ from ..database.messageDB import ForumDatabase
 
 class MessSpider(scrapy.Spider):
     name = "messages"
-
     def start_requests(self):
         db = ForumDatabase()
         urls = []
         for title in db.get_titles():
             if title["page_count"] != 1:
                 for i in range(1, int(title["page_count"])):
-                    print(i)
                     urls.insert(len(urls), title['url'] + "?page=" + str(i))
             else:
                 urls.insert(len(urls), title['url'] + "?page=" + "1")
-        print(urls)
+        # print(urls)
         db.close()
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
